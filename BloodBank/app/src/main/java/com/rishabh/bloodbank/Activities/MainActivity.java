@@ -3,6 +3,9 @@ package com.rishabh.bloodbank.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener;
@@ -25,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    TextView make_request_button = findViewById(R.id.make_request_button);
+    make_request_button.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        startActivity(new Intent(MainActivity.this, MakeRequestActivity.class));
+      }
+    });
     requestDataModels = new ArrayList<>();
     Toolbar toolbar = findViewById(R.id.toolbar);
     toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
