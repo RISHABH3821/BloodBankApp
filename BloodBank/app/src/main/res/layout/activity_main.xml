@@ -17,6 +17,7 @@
     android:layout_height="wrap_content">
     <TextView
       android:id="@+id/pick_location"
+      android:textStyle="italic"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
@@ -24,7 +25,6 @@
       android:drawableEnd="@drawable/ic_location_on_black_24dp"
       android:drawableTint="@android:color/black"
       android:gravity="center"
-      android:textStyle="italic"
       android:text="Choose Location"
       android:textAlignment="gravity"
       android:textColor="@android:color/black"

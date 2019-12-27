@@ -1,16 +1,17 @@
 package com.rishabh.bloodbank.Activities;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,9 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
+import androidx.core.content.PermissionChecker;
+import androidx.preference.PreferenceManager;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
@@ -29,12 +32,10 @@ import com.androidnetworking.interfaces.StringRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.bumptech.glide.Glide;
 import com.rishabh.bloodbank.R;
+import com.rishabh.bloodbank.Utils.Endpoints;
 import java.io.File;
 import java.net.URISyntaxException;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import okhttp3.OkHttpClient;
-import okhttp3.OkHttpClient.Builder;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MakeRequestActivity extends AppCompatActivity {
@@ -50,11 +51,7 @@ public class MakeRequestActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_make_request);
-    OkHttpClient.Builder client = new Builder();
-    client.connectTimeout(30, TimeUnit.SECONDS);
-    client.readTimeout(5, TimeUnit.MINUTES);
-    client.writeTimeout(5, TimeUnit.MINUTES);
-    AndroidNetworking.initialize(getApplicationContext(),client.build());
+    AndroidNetworking.initialize(getApplicationContext());
     messageText = findViewById(R.id.message);
     chooseImageText = findViewById(R.id.choose_text);
     postImage = findViewById(R.id.post_image);
@@ -62,7 +59,7 @@ public class MakeRequestActivity extends AppCompatActivity {
     submit_button.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
-        if(isValid()){
+        if (isValid()) {
           //code to upload this post.
           uploadRequest(messageText.getText().toString());
         }
@@ -73,12 +70,121 @@ public class MakeRequestActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         //code to pick image
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, 101);
+        permission();
       }
     });
 
+  }
+
+
+  private void pickImage() {
+    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+    intent.setType("image/*");
+    startActivityForResult(intent, 101);
+  }
+
+
+  private void permission() {
+    if (PermissionChecker.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE)
+        != PermissionChecker.PERMISSION_GRANTED) {
+      //asking for permission
+      requestPermissions(new String[]{READ_EXTERNAL_STORAGE}, 401);
+    } else {
+      //permission is already there
+      pickImage();
+    }
+  }
+
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode == 401) {
+      if (grantResults[0] == PermissionChecker.PERMISSION_GRANTED) {
+        //permission was granted
+        pickImage();
+      } else {
+        //permission not granted
+        showMessage("Permission Declined");
+      }
+    }
+  }
+
+
+  private void uploadRequest(String message) {
+    //code to upload the message
+    String path = "";
+    try {
+      path = getPath(imageUri);
+    } catch (URISyntaxException e) {
+      showMessage("wrong uri");
+    }
+    String number = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+        .getString("number", "12345");
+    AndroidNetworking.upload(Endpoints.upload_request)
+        .addMultipartFile("file", new File(path))
+        .addQueryParameter("message", message)
+        .addQueryParameter("number", number)
+        .setPriority(Priority.HIGH)
+        .build()
+        .setUploadProgressListener(new UploadProgressListener() {
+          @Override
+          public void onProgress(long bytesUploaded, long totalBytes) {
+            // do anything with progress
+            long progress = (bytesUploaded / totalBytes) * 100;
+            chooseImageText.setText(String.valueOf(progress+"%"));
+            chooseImageText.setOnClickListener(null);
+          }
+        })
+        .getAsJSONObject(new JSONObjectRequestListener() {
+          @Override
+          public void onResponse(JSONObject response) {
+            try {
+              if(response.getBoolean("success")){
+                showMessage("Succesfull");
+                MakeRequestActivity.this.finish();
+              }else{
+                showMessage(response.getString("message"));
+              }
+            } catch (JSONException e) {
+              e.printStackTrace();
+            }
+          }
+
+          @Override
+          public void onError(ANError anError) {
+
+          }
+        });
+  }
+
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == 101 && resultCode == RESULT_OK) {
+      if (data != null) {
+        imageUri = data.getData();
+        Glide.with(getApplicationContext()).load(imageUri).into(postImage);
+      }
+    }
+  }
+
+  private boolean isValid() {
+    if (messageText.getText().toString().isEmpty()) {
+      showMessage("Message shouldn't be empty");
+      return false;
+    }else if(imageUri==null){
+      showMessage("Pick Image");
+      return false;
+    }
+    return true;
+  }
+
+
+  private void showMessage(String msg) {
+    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
   }
 
 
@@ -148,74 +254,6 @@ public class MakeRequestActivity extends AppCompatActivity {
 
   public static boolean isMediaDocument(Uri uri) {
     return "com.android.providers.media.documents".equals(uri.getAuthority());
-  }
-
-
-
-  private void uploadRequest(String message){
-    //code to upload the message
-  }
-
-
-  private void uploadImage(){
-    //code to upload image
-    String path = "";
-    try {
-      path = getPath(imageUri);
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    AndroidNetworking.upload("http://busy-programmer.000webhostapp.com/test_upload.php")
-        .addMultipartFile("file",new File(path))
-        .setPriority(Priority.HIGH)
-        .addQueryParameter("key", "value")
-        .build()
-        .setUploadProgressListener(new UploadProgressListener() {
-          @Override
-          public void onProgress(long bytesUploaded, long totalBytes) {
-            // do anything with progress
-            Log.d("PROGRESS", "progress "+(bytesUploaded/totalBytes)*100);
-            chooseImageText.setText(String.format("%d %%", (bytesUploaded / totalBytes) * 100));
-          }
-        })
-        .getAsString(new StringRequestListener() {
-          @Override
-          public void onResponse(String response) {
-            Toast.makeText(MakeRequestActivity.this, ""+response, Toast.LENGTH_SHORT).show();
-          }
-
-          @Override
-          public void onError(ANError anError) {
-            Toast.makeText(MakeRequestActivity.this, anError.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            Log.d("ERROR", anError.getErrorDetail()+anError.getErrorBody()+anError.getMessage());
-          }
-        });
-  }
-
-
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    if(requestCode == 101 && resultCode == RESULT_OK){
-      if(data!=null){
-        imageUri = data.getData();
-        Glide.with(getApplicationContext()).load(imageUri).into(postImage);
-        uploadImage();
-      }
-    }
-  }
-
-  private boolean isValid(){
-    if(messageText.getText().toString().isEmpty()){
-      showMessage("Message shouldn't be empty");
-      return false;
-    }
-    return true;
-  }
-
-
-  private void showMessage(String msg){
-    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
   }
 
 

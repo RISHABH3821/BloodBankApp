@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.preference.PreferenceManager;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
@@ -63,6 +64,8 @@ public class RegisterActivity extends AppCompatActivity {
       @Override
       public void onResponse(String response) {
         if(response.equals("Success")){
+          PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
+              .putString("city", city).apply();
           Toast.makeText(RegisterActivity.this, response, Toast.LENGTH_SHORT).show();
           startActivity(new Intent(RegisterActivity.this, MainActivity.class));
           RegisterActivity.this.finish();

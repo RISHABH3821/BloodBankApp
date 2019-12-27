@@ -1,19 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:background="@android:color/white"
   tools:context=".Activities.SearchActivity">
 
-  <TextView
-    android:id="@+id/textView"
-    android:layout_width="wrap_content"
+  <LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Search Page"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:padding="20dp"
+      android:text="Be calm you’ll find help here."
+      android:textColor="@color/colorPrimary"
+      android:textSize="24sp" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:text="Choose City"
+      android:textColor="@android:color/black"
+      android:textSize="36sp" />
+
+    <EditText
+      android:id="@+id/et_city"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:layout_marginStart="20dp"
+      android:hint="eg: London"
+      android:textColor="@android:color/black"
+      android:textSize="24sp" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:text="Blood Group"
+      android:textColor="@android:color/black"
+      android:textSize="36sp" />
+
+    <EditText
+      android:id="@+id/et_blood_group"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:layout_marginStart="20dp"
+      android:hint="eg: A+"
+      android:textColor="@android:color/black"
+      android:textSize="24sp" />
+
+    <Button
+      android:id="@+id/submit_button"
+      android:textStyle="bold"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="30dp"
+      android:background="@drawable/button_bg"
+      android:text="Find donors"
+      android:textAllCaps="false"
+      android:textColor="@android:color/white"
+      android:textSize="20sp" />
+
+  </LinearLayout>
+
+</ScrollView>
