@@ -35,4 +35,6 @@ Search Page                |  Search Results Page
 
 
 ## YouTube Tutorial
-[![Everything Is AWESOME](https://img.youtube.com/vi/StTqXEQ2l-Y/0.jpg)](https://www.youtube.com/watch?v=StTqXEQ2l-Y "Everything Is AWESOME")
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=Kqj6A1xdVio&t=1s"><img src="https://img.youtube.com/vi/Kqj6A1xdVio&t=1s/0.jpg" alt="Youtube Tutorial"></a>
+</div>
