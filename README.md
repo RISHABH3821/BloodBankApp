@@ -18,6 +18,11 @@ For android the languages we are using are Java and XML.
 #### Glide(For loading images): https://github.com/bumptech/glide
 #### Fast Android Networking (For better Image Upload): https://github.com/amitshekhariitbhu/Fast-Android-Networking
 
+
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![](https://raw.github.com/RISHABH3821/BloodBankApp/master/ScreenShots/Screenshot_2019-12-27-15-54-52-83_f40dc4c0b5047a0ee13f6c2a4e6ab6a3.png)  |  ![](https://raw.github.com/RISHABH3821/BloodBankApp/master/ScreenShots/Screenshot_2019-12-27-15-54-52-83_f40dc4c0b5047a0ee13f6c2a4e6ab6a3.png)
+
 ## ScreenShots
 <div align="center">
     <img src="https://raw.github.com/RISHABH3821/BloodBankApp/master/ScreenShots/Screenshot_2019-12-27-15-54-52-83_f40dc4c0b5047a0ee13f6c2a4e6ab6a3.png" width="400px"/> 
