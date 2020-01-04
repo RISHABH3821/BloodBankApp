@@ -36,11 +36,5 @@ Search Page                |  Search Results Page
 
 ## YouTube Tutorial
 <div align="center">
-  <a href="https://www.youtube.com/watch?v=Kqj6A1xdVio&t=1s"><img src="https://img.youtube.com/vi/Kqj6A1xdVio&t=1s/0.jpg" alt="Youtube Tutorial"></a>
+  <a href="https://www.youtube.com/watch?v=Kqj6A1xdVio&t=1s"><img src="http://i3.ytimg.com/vi/Kqj6A1xdVio/maxresdefault.jpg" alt="Youtube Tutorial"></a>
 </div>
-
-<iframe width="560" height="315"
-src="https://www.youtube.com/watch?v=Kqj6A1xdVio&t=1s" 
-frameborder="0" 
-allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-allowfullscreen></iframe>
