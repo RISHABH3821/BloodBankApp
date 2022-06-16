@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.rishabh.bloodbank">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.CALL_PHONE" />
 
   <application
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme"
-    android:usesCleartextTraffic="true">
-    <activity android:name=".Activities.SearchResults"></activity>
-    <activity android:name=".Activities.MakeRequestActivity" />
-    <activity android:name=".Activities.SearchActivity" />
-    <activity android:name=".Activities.LoginActivity" />
-    <activity android:name=".Activities.RegisterActivity" />
-    <activity android:name=".Activities.SplashScreen">
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme"
+      android:usesCleartextTraffic="true">
+    <activity
+        android:name=".Activities.SearchResults"
+        android:exported="false" />
+    <activity
+        android:name=".Activities.MakeRequestActivity"
+        android:exported="false" />
+    <activity
+        android:name=".Activities.SearchActivity"
+        android:exported="false" />
+    <activity
+        android:name=".Activities.LoginActivity"
+        android:exported="false" />
+    <activity
+        android:name=".Activities.RegisterActivity"
+        android:exported="false" />
+    <activity
+        android:name=".Activities.SplashScreen"
+        android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <activity android:name=".Activities.MainActivity" />
+    <activity
+        android:name=".Activities.MainActivity"
+        android:exported="false" />
   </application>
 
 </manifest>
